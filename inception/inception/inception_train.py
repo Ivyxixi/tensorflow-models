@@ -223,8 +223,8 @@ def train(dataset):
     num_classes = dataset.num_classes() + 1
 
      # Split the batch of images and labels for towers.
-    images_splits = tf.split(0, FLAGS.num_gpus, images)
-    labels_splits = tf.split(0, FLAGS.num_gpus, labels)
+    images_splits = tf.split(images, FLAGS.num_gpus, 0)
+    labels_splits = tf.split(labels, FLAGS.num_gpus, 0)
 
     # Calculate the gradients for each model tower.
     tower_grads = []
