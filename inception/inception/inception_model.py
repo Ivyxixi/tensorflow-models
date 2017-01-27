@@ -148,7 +148,7 @@ def _activation_summary(x):
   # session. This helps the clarity of presentation on tensorboard.
   tensor_name = re.sub('%s_[0-9]*/' % TOWER_NAME, '', x.op.name)
   tf.contrib.deprecated.histogram_summary(tensor_name + '/activations', x)
-  tf.contrib.deprecated.summary.scalar(tensor_name + '/sparsity', tf.nn.zero_fraction(x))
+  tf.summary.scalar(tensor_name + '/sparsity', tf.nn.zero_fraction(x))
 
 
 def _activation_summaries(endpoints):
