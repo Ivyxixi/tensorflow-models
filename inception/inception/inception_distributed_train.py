@@ -191,7 +191,7 @@ def train(target, dataset, cluster_spec):
 
       # Add histograms for model variables.
       for var in variables_to_average:
-        tf.histogram_summary(var.op.name, var)
+        tf.summary.histogram(var.op.name, var)
 
       # Create synchronous replica optimizer.
       opt = tf.train.SyncReplicasOptimizer(
@@ -215,7 +215,7 @@ def train(target, dataset, cluster_spec):
       # Add histograms for gradients.
       for grad, var in grads:
         if grad is not None:
-          tf.histogram_summary(var.op.name + '/gradients', grad)
+          tf.summary.histogram(var.op.name + '/gradients', grad)
 
       apply_gradients_op = opt.apply_gradients(grads, global_step=global_step)
 
