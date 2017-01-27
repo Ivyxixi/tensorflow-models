@@ -133,7 +133,7 @@ def train(target, dataset, cluster_spec):
                                       FLAGS.learning_rate_decay_factor,
                                       staircase=True)
       # Add a summary to track the learning rate.
-      tf.scalar_summary('learning_rate', lr)
+      tf.summary.scalar('learning_rate', lr)
 
       # Create an optimizer that performs gradient descent.
       opt = tf.train.RMSPropOptimizer(lr,
@@ -171,8 +171,8 @@ def train(target, dataset, cluster_spec):
           loss_name = l.op.name
           # Name each loss as '(raw)' and name the moving average version of the
           # loss as the original loss name.
-          tf.scalar_summary(loss_name + ' (raw)', l)
-          tf.scalar_summary(loss_name, loss_averages.average(l))
+          tf.summary.scalar(loss_name + ' (raw)', l)
+          tf.summary.scalar(loss_name, loss_averages.average(l))
 
         # Add dependency to compute loss_averages.
         with tf.control_dependencies([loss_averages_op]):
