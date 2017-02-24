@@ -73,6 +73,11 @@ tf.app.flags.DEFINE_float('num_epochs_per_decay', 30.0,
 tf.app.flags.DEFINE_float('learning_rate_decay_factor', 0.16,
                           """Learning rate decay factor.""")
 
+# XLA JIT compilation flag
+tf.app.flags.DEFINE_boolean('jit_compilation', False,
+                            """Whether to turn on XLA JIT compilation.""")
+
+
 # Constants dictating the learning rate schedule.
 RMSPROP_DECAY = 0.9                # Decay term for RMSProp.
 RMSPROP_MOMENTUM = 0.9             # Momentum in RMSProp.
@@ -312,9 +317,19 @@ def train(dataset):
     # Start running operations on the Graph. allow_soft_placement must be set to
     # True to build towers on GPU, as some of the ops do not have GPU
     # implementations.
-    sess = tf.Session(config=tf.ConfigProto(
+    jit_level = 0
+    config = tf.ConfigProto(
         allow_soft_placement=True,
-        log_device_placement=FLAGS.log_device_placement))
+        log_device_placement=FLAGS.log_device_placement)
+
+    if FLAGS.jit_compilation:
+       # Turns on XLA JIT compilation.
+       jit_level = tf.OptimizerOptions.ON_1
+       print("XLA JIT compilation is ON")
+
+    config.graph_options.optimizer_options.global_jit_level = jit_level
+
+    sess = tf.Session(config=config)
     sess.run(init)
 
     if FLAGS.pretrained_model_checkpoint_path:
